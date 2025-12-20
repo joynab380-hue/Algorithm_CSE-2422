@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-struct Node 
+struct Node
 {
     char ch;
     int freq;
@@ -23,7 +23,7 @@ struct Compare {
     }
 };
 
-void generateCodes(Node* root, string code, unordered_map<char, string> &huffmanCode) 
+void generateCodes(Node* root, string code, unordered_map<char, string> &huffmanCode)
 {
     if (!root) return;
 
@@ -34,7 +34,7 @@ void generateCodes(Node* root, string code, unordered_map<char, string> &huffman
     generateCodes(root->right, code + "1", huffmanCode);
 }
 
-int main() 
+int main()
 {
     string text;
 
@@ -53,7 +53,7 @@ int main()
         pq.push(new Node(pair.first, pair.second));
     }
 
-    while (pq.size() > 1) 
+    while (pq.size() > 1)
     {
         Node *left = pq.top(); pq.pop();
         Node *right = pq.top(); pq.pop();
@@ -73,15 +73,19 @@ int main()
     cout << "\nCharacter | Frequency | Huffman Code | Calculation\n";
     cout << "-------------------------------------------------------\n";
 
+    int total_c = 0;
     int total_bits = 0;
+    int table_bits = 0;
 
     for (auto pair : freq) {
         char c = pair.first;
+        total_c+=c;
         int f = pair.second;
         string code = huffmanCode[c];
 
         int bitsUsed = f * code.length();
         total_bits += bitsUsed;
+        table_bits+=8+code.length();
 
         cout << "   " << c
              << "      |     " << f
@@ -89,8 +93,10 @@ int main()
              << "        | " << f << " X " << code.length()
              << " = " << bitsUsed << " bits\n";
     }
-
-    cout << "\nTotal compressed size: " << total_bits << " bits\n";
+    cout << "\nOriginal Length: " << total_c << " bits\n";
+    cout << "Compressed Length: " << total_bits << " bits\n";
+    cout<<"Table Length: "<<table_bits<< " bits\n";
+    cout <<"Variable Length: "<<total_bits+table_bits << " bits\n";
 
     return 0;
 }
